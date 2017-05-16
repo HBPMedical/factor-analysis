@@ -1,3 +1,5 @@
+% Copyright © 2016-2017 LREN CHUV, Jing Cui de Chambrier
+% Licenced under the GNU Affero General Public License
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % data from HBP workshop
@@ -28,7 +30,7 @@ tivbsl          = RegionVolume.TIV(bslid,:)*10^3;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % =====================================================================
-% First scale by total grey matter 
+% First scale by total grey matter
 % then adjust by age, gender, tiv, MR strength
 
 % scale each region with total grey matter
@@ -58,7 +60,7 @@ B1          = inv(COVARIATES'*COVARIATES)*COVARIATES'*log_vol(:,:);
 log_vol     = log_vol-COVARIATES(:,2:end)*B1(2:end,:);
 
 % =====================================================================
-% First adjust by age, gender 
+% First adjust by age, gender
 % then scale by total grey matter
 
 % remove effects of age, gender
@@ -77,7 +79,7 @@ log_vol     = log(norvolbsl./(1-norvolbsl));
 % calculate total grey matter
 grmtvlmbsl  = sum(volumebsl')';
 
-% remove effects of age, gender and total grey matter 
+% remove effects of age, gender and total grey matter
 COVARIATES      = [ones(length(agebsl),1),agebsl(:,1),genderbsl(:,1),grmtvlmbsl(:,1), MRIseq(:,1)];
 B1              = inv(COVARIATES'*COVARIATES)*COVARIATES'*volumebsl(:,:);
 norvolbsl_res   = volumebsl-COVARIATES(:,2:end)*B1(2:end,:);
@@ -88,7 +90,7 @@ log_vol         = norvolbsl_res;
 % =====================================================================
 % First adjust by age, gender and TIV
 
-% remove effects of age, gender and total grey matter 
+% remove effects of age, gender and total grey matter
 COVARIATES      = [ones(length(agebsl),1),agebsl(:,1),genderbsl(:,1),tivbsl(:,1), MRIseq(:,1)];
 B1              = inv(COVARIATES'*COVARIATES)*COVARIATES'*volumebsl(:,:);
 norvolbsl_res   = volumebsl-COVARIATES(:,2:end)*B1(2:end,:);
@@ -153,4 +155,3 @@ xlswrite('C:\jcui\DiseaseProgression\Psi_BSLvolume_region.csv',Psi);
 log_vol         = log_vol-repmat(mean(log_vol')',1,size(log_vol,2));
 weights_F       = log_vol'*F;
 Regions_lambda  = table(RegionVolume.Properties.VariableNames(34:end)',weights_F(:,1));
-
